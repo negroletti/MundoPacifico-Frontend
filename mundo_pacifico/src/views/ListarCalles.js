@@ -5,6 +5,7 @@ import "primereact/resources/themes/lara-dark-indigo/theme.css";
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -17,24 +18,22 @@ const ListarCalles = () => {
         {field: 'nombre_ciudad', header:'Nombre Ciudad'},
         {field: 'nombre_provincia', header:'Nombre Provincia'},
         {field: 'Nombre_region', header:'Nombre Region'},
-    ]
+    ];
     
-    useEffect(() => {
-        getCalles();
-    }, []);
-    
-    const handleInputChangeCalle = (e) => {
+    /*const handleInputChangeCalle = (e) => {
         setCalle({
             ...calle,
             [e.target.name]: e.target.value
         });
-    };
+    };*/
+
     //get calles from api
     const getCalles = async () => {
         try{
             const response = await fetch('http://mundo_pacifico.test/api/calles/get/all');
             if(response.status===200){
                 const data = await response.json();
+                setCalle([]);
                 setCalle(data);
             }
         } catch(error) {
@@ -42,29 +41,6 @@ const ListarCalles = () => {
         }
 
     };
-    //update calle
-    const updateCalle = async (id) => {
-        try{
-            const response = fetch(`http://mundo_pacifico.test/api/calles/${id}`, {
-                method: 'PUT',
-                body: JSON.stringify(calle),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if(response.status===200){
-                Swal.fire(
-                    '¡Editado!',
-                    'La calle se ha editado correctamente.',
-                    'success'
-                );
-                getCalles();
-            }
-        } catch(error) {
-            console.log(error);
-        }
-};
-
     //delete calles from api
     const deleteCalle = async (id) => {
         try{
@@ -76,11 +52,10 @@ const ListarCalles = () => {
             });
             if(response.status===204){
                 Swal.fire({
-                    position: 'top-end',
                     icon: 'success',
                     title: 'Calle eliminada',
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 2500
                 });
                 setCalle([]);
                 getCalles();
@@ -91,7 +66,7 @@ const ListarCalles = () => {
     };
 
     const dynamicColumns = columns.map((col, i) => {
-        return <Column key={i} field={col.field} header={col.header} />;
+        return <Column key={i} field={col.field} header={col.header} sortable/>;
     });
     const buttonEdit = (rowData) => {
         return(
@@ -103,12 +78,15 @@ const ListarCalles = () => {
                 <Button label="Eliminar" className="p-button-raised p-button-danger" onClick={()=> deleteCalle(`${rowData.id}`)}/>
         )
     };
+    useEffect(() => {
+        getCalles();
+    }, []);
     //Datatable con calles
     return(
             <div style={{margin: "3% 20% 0 24%"}}>
                 <div style={{margin:"0 0 3% 0"}}>
                         <h2 style={{color:"#e2e3e3"}}>Listado de calles</h2>
-                        <Button label="Agregar calle" className="p-button-raised p-button-success" />
+                        <Button label="Agregar calle" onClick={()=>Navigate("/agregar")} className="p-button-raised p-button-success" />
                 </div>
                 <Card style={{ width: '80%', marginBottom: '2em' }}>
                 <DataTable value={calle} responsiveLayout="scroll">

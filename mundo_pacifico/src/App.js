@@ -8,6 +8,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={<ListarCalles/>} />
         <Route exact path="/editarcalle/:id" element={<EditarCalle/>}/>
+        <Route exact path="/agregar" element={<EditarCalle/>}/>
       </Routes>
     </Router>
   );
