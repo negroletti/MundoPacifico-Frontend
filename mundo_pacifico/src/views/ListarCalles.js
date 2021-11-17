@@ -20,13 +20,6 @@ const ListarCalles = () => {
         {field: 'Nombre_region', header:'Nombre Region'},
     ];
     
-    /*const handleInputChangeCalle = (e) => {
-        setCalle({
-            ...calle,
-            [e.target.name]: e.target.value
-        });
-    };*/
-
     //get calles from api
     const getCalles = async () => {
         try{
